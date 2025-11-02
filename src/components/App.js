@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "../styles/App.css";
 
 function App() {
   const [name1, setName1] = useState("");
@@ -7,58 +6,50 @@ function App() {
   const [result, setResult] = useState("");
 
   const calculateRelationship = () => {
-    if (name1.trim() === "" || name2.trim() === "") {
+    if (!name1.trim() || !name2.trim()) {
       setResult("Please Enter valid input");
       return;
     }
 
-    let name1Arr = name1.split("");
-    let name2Arr = name2.split("");
-
-    for (let i = 0; i < name1Arr.length; i++) {
-      const indexInName2 = name2Arr.indexOf(name1Arr[i]);
-      if (indexInName2 !== -1) {
-        name1Arr[i] = "";
-        name2Arr[indexInName2] = "";
+    let arr1 = name1.split("");
+    let arr2 = name2.split("");
+    for (let i = 0; i < arr1.length; i++) {
+      const index = arr2.indexOf(arr1[i]);
+      if (index !== -1) {
+        arr1[i] = "";
+        arr2[index] = "";
       }
     }
 
-    const remainingLettersCount =
-      name1Arr.filter((ch) => ch !== "").length +
-      name2Arr.filter((ch) => ch !== "").length;
+    const remainingLength =
+      arr1.join("").length + arr2.join("").length;
 
-    const relationshipMap = {
-      1: "Friends",
-      2: "Love",
-      3: "Affection",
-      4: "Marriage",
-      5: "Enemy",
-      0: "Siblings",
-    };
+    const flames = ["Siblings","Friends", "Love", "Affection", "Marriage", "Enemy"];
+    const relation = flames[remainingLength % 6];
 
-    const flamesResult = remainingLettersCount % 6;
-    setResult(relationshipMap[flamesResult]);
+    setResult(relation);
   };
 
-  const clearInputs = () => {
+  const clearAll = () => {
     setName1("");
     setName2("");
     setResult("");
   };
 
   return (
-    <div id="main">
+    <div >
+    
       <input
-        type="text"
         data-testid="input1"
         name="name1"
+        placeholder="Enter first name"
         value={name1}
         onChange={(e) => setName1(e.target.value)}
       />
       <input
-        type="text"
         data-testid="input2"
         name="name2"
+        placeholder="Enter second name"
         value={name2}
         onChange={(e) => setName2(e.target.value)}
       />
@@ -67,11 +58,17 @@ function App() {
         name="calculate_relationship"
         onClick={calculateRelationship}
       >
-        Calculate Relationship Future
+        Calculate Relationship
       </button>
-      <button data-testid="clear" name="clear" onClick={clearInputs}>
+
+      <button
+        data-testid="clear"
+        name="clear"
+        onClick={clearAll}
+      >
         Clear
       </button>
+
       <h3 data-testid="answer">{result}</h3>
     </div>
   );
